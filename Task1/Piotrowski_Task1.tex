@@ -1,0 +1,91 @@
+\documentclass{article}
+
+\usepackage{enumitem}
+\usepackage{geometry}
+\usepackage{booktabs}
+
+\newgeometry{lmargin=3cm, rmargin=3cm, bmargin=2.5cm}
+\setlist[itemize]{noitemsep,topsep=-1pt, leftmargin=*}
+
+\title{Description of Data Base}
+\author{Krzysztof Piotrowski}
+\date{26th of October}
+
+
+\begin{document}
+
+\maketitle
+\section{Description and Aim}
+A database stores information about trips, customers and employees. 
+For each person we store personal and contact details. 
+People's addresses are managed in separate entity called "Addresses".
+Addresses derive from City/Country entity to make the storage easier.
+For each trip we store information about duration of the trip, maximal number of participants and hotel.
+Moreover, each trip has obligatory connection with transport and address. 
+Optionally, it can be connected to Attraction entity.
+Just like people, trip will derive from address entity to store exact information about trip location.
+Both trip and customer are connected via transaction entity.
+It stores information about IDs, price of the trip and payment status (if a customer already paid for the trip or not).
+Each entity will have unique ID to make management easier.
+\section{Entities and attributes}
+    \bigskip
+    \begin{tabular}{p{.35\textwidth}p{.35\textwidth}p{.35\textwidth}}
+        \textbf{Travel Agent} & \textbf{Guide} & \textbf{Customer}\\
+        \begin{itemize}
+            \item name
+            \item surname
+            \item mail
+            \item telephone
+            \item agent ID
+        \end{itemize} & \begin{itemize}
+            \item name
+            \item surname
+            \item mail
+            \item telephone
+            \item guide ID
+        \end{itemize} & \begin{itemize}
+            \item name
+            \item surname
+            \item mail
+            \item telephone
+            \item customer ID
+        \end{itemize}\\
+    \end{tabular}
+    \begin{tabular}{p{.35\textwidth}p{.35\textwidth}p{.35\textwidth}}
+        \textbf{Trip} & \textbf{Transport} & \textbf{Attraction}\\
+        \begin{itemize}
+            \item starting date
+            \item ending date
+            \item max. num. of participants
+            \item hotel
+            \item trip ID 
+        \end{itemize} & \begin{itemize}
+            \item mean of transport
+            \item place
+            \item date 
+            \item transport ID
+        \end{itemize} & \begin{itemize}
+            \item starting date
+            \item ending date
+            \item max. num. of participants
+            \item attraction ID
+        \end{itemize}\\
+    \end{tabular}
+    \begin{tabular}{p{.35\textwidth}p{.35\textwidth}p{.35\textwidth}}
+        \textbf{Transaction} & \textbf{Address} & \textbf{City/Country}\\
+        \begin{itemize}
+            \item price
+            \item payment status
+            \item transaction ID
+        \end{itemize} & \begin{itemize}
+            \item street 
+            \item number
+            \item mail code
+            \item address ID
+        \end{itemize} & \begin{itemize}
+            \item country
+            \item city
+            \item country/city ID
+        \end{itemize}\\
+    \end{tabular}      
+\end{document}
