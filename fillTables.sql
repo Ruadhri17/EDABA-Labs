@@ -2,6 +2,8 @@ DECLARE
     TRIP_DATE DATE;
     HOTEL_FOR_TRIP INTEGER;
 BEGIN
+-- DELETE INDEX RESPONSIBLE FOR UNIQUENESS OF GUIDE FOR EACH TRIP (WHICH IS NOT NECESSARY)
+DELETE INDEX TRIP__IDX;
 -- CITY/COUNTRY GENERATION --
 FOR loop_counter IN 1..20 LOOP
     INSERT INTO "CITY" (CITY_ID, CITY, COUNTRY)
@@ -11,7 +13,6 @@ FOR loop_counter IN 1..20 LOOP
         DBMS_RANDOM.STRING('A', DBMS_RANDOM.VALUE(8, 20))
     );
 END LOOP;
-COMMIT;
 END;
 
 BEGIN
@@ -27,7 +28,6 @@ FOR loop_counter IN 1..160 LOOP
         DBMS_RANDOM.VALUE(1, 20)
     );
 END LOOP;
-COMMIT;
 END;
 
 BEGIN
@@ -43,7 +43,6 @@ FOR loop_counter IN 1..100 LOOP
         loop_counter
     );
 END LOOP;
-COMMIT;
 END;
 
 BEGIN
@@ -68,7 +67,6 @@ FOR loop_counter in 1..20 LOOP
         loop_counter+120
     );
 END LOOP;
-COMMIT;
 END;
 
 BEGIN
@@ -82,7 +80,6 @@ FOR loop_counter in 1..20 LOOP
         loop_counter+140
     );
 END LOOP;
-COMMIT;
 END;
 
 BEGIN
@@ -120,7 +117,6 @@ FOR loop_counter in 1..40 LOOP
         loop_counter
     );
 END LOOP;
-COMMIT;
 END;
 
 BEGIN
@@ -135,5 +131,4 @@ FOR loop_counter in 1..100 LOOP
         DBMS_RANDOM.VALUE(1, 40)
     );
 END LOOP;
-COMMIT;
 END;
