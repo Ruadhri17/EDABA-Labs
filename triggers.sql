@@ -90,3 +90,61 @@ WHERE TRIPHOTELRELATION.TRIP_ID = :OLD.TRIP_ID;
 DELETE FROM TRANSACTION 
 WHERE TRANSACTION.TRIP_ID = :OLD.TRIP_ID;
 END;
+-- Trigger 3 test
+-- show that trip with ID one exists
+SELECT * FROM TRIP
+WHERE TRIP_ID = 1;
+-- show that trip has assigned hotel
+SELECT * FROM TRIPHOTELRELATION
+WHERE TRIP_ID = 1;
+-- show that there are already clients that bought that trip
+SELECT * FROM TRANSACTION
+WHERE TRIP_ID = 1;
+-- cancel trip
+DELETE TRIP WHERE TRIP_ID=1;
+-- show that there is no hotel - trip connection
+SELECT * FROM TRIPHOTELRELATION
+WHERE TRIP_ID = 1;
+-- show that there are no transactions made for that trip
+SELECT * FROM TRANSACTION
+WHERE TRIP_ID = 1;
+
+-- Triger 4 (Extra)
+-- trigger calculates duration and cost per day of trip when trip is added or edited.
+CREATE OR REPLACE TRIGGER CALULATE_DURATION_AND_COST_PER_DAY
+AFTER INSERT OR UPDATE ON TRIP
+FOR EACH ROW
+DECLARE
+DURATION NUMBER;
+COST_PER_DAY NUMBER(7,2);
+BEGIN
+DURATION := :NEW.ENDING_DATE - :NEW.STARTING_DATE;
+COST_PER_DAY := :NEW.PRICE / DURATION;  
+DBMS_OUTPUT.PUT_LINE('TRIP LAST : ' || DURATION || ' DAY(S) ');
+DBMS_OUTPUT.PUT_LINE('COST BY ONE DAY IS EQUAL : ' || COST_PER_DAY);
+END;
+-- Triger 4 test
+SET SERVEROUTPUT ON; -- to see ouput in script output
+--first add transport for trip
+INSERT INTO "TRANSPORT" (TRANSPORT_ID, MEAN_OF_TRANSPORT, PLACE, DATE_OF_DEPARTURE)
+VALUES (
+        41,
+        'PLANE',
+        'WARSAW',
+        TO_DATE('22/07/16'));
+-- when adding new trip It can be seen that duration and cost per day is calculated
+INSERT INTO "TRIP" (TRIP_ID, DESTINATION, PRICE, STARTING_DATE, ENDING_DATE, MAXIMAL_NUMBER_OF_PARTICIPANTS, TRANSPORT_ID, GUIDE_ID)
+VALUES (
+        41,
+        'PARIS',
+        6780,
+        TO_DATE('22/07/16'),
+        TO_DATE('22/07/30'),
+        100,
+        41,
+        10);
+DELETE TRIP WHERE TRIP_ID=41;
+-- same goes when trip is updated
+UPDATE TRIP T
+SET T.PRICE = 10000
+WHERE T.TRIP_ID = 1;
