@@ -49,3 +49,32 @@ SET T.PRICE = 10000
 WHERE T.TRIP_ID = 1;
 
 --Triger 2
+-- this trigger change trip destination whenever new hotel to trip is assigned
+-- it check location of hotel and update destination of trip according to that 
+CREATE OR REPLACE TRIGGER CHANGE_DESTINATION
+AFTER UPDATE ON TRIPHOTELRELATION
+FOR EACH ROW
+BEGIN
+UPDATE TRIP T
+SET T.DESTINATION = TO_CHAR((SELECT CITY.COUNTRY
+            FROM HOTEL
+            JOIN ADDRESS ON HOTEL.ADDRESS_ID = ADDRESS.ADDRESS_ID
+            JOIN CITY ON ADDRESS.CITY_ID = CITY.CITY_ID
+            WHERE HOTEL_ID = :NEW.HOTEL_ID));
+END;
+-- Triger 2 test
+-- show all hotel - trip relations
+SELECT * FROM TRIPHOTELRELATION;
+--show desstination of the trip with ID = 2
+SELECT DESTINATION FROM TRIP
+WHERE TRIP_ID = 2;
+-- update hotel for the trip with ID = 2 
+UPDATE TRIPHOTELRELATION
+SET HOTEL_ID = 5
+WHERE
+TRIP_ID = 2;
+-- show again destination of the trip with ID = 2 
+SELECT DESTINATION FROM TRIP
+WHERE TRIP_ID = 2;
+
+-- Triger 3
