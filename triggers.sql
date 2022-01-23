@@ -60,7 +60,8 @@ SET T.DESTINATION = TO_CHAR((SELECT CITY.COUNTRY
             FROM HOTEL
             JOIN ADDRESS ON HOTEL.ADDRESS_ID = ADDRESS.ADDRESS_ID
             JOIN CITY ON ADDRESS.CITY_ID = CITY.CITY_ID
-            WHERE HOTEL_ID = :NEW.HOTEL_ID));
+            WHERE HOTEL_ID = :NEW.HOTEL_ID))
+WHERE T.TRIP_ID = :OLD.TRIP_ID;
 END;
 -- Triger 2 test
 -- show all hotel - trip relations
@@ -78,3 +79,14 @@ SELECT DESTINATION FROM TRIP
 WHERE TRIP_ID = 2;
 
 -- Triger 3
+-- this trigger is activated when trip is cancelled
+-- It casues canceling of all transactions associated with trip and make hotel free (cancel connections of trip and hotel)
+CREATE OR REPLACE TRIGGER CANCEL_TRIP
+BEFORE DELETE ON TRIP
+FOR EACH ROW
+BEGIN
+DELETE FROM TRIPHOTELRELATION 
+WHERE TRIPHOTELRELATION.TRIP_ID = :OLD.TRIP_ID;
+DELETE FROM TRANSACTION 
+WHERE TRANSACTION.TRIP_ID = :OLD.TRIP_ID;
+END;
